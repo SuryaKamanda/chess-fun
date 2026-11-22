@@ -95,7 +95,115 @@ class Board:
                 return False
         else:
             return False
-    
+
+    def is_path_clear(self, start, end):
+        start_row = start[0]
+        start_col = start[1]
+        end_row = end[0]
+        end_col = end[1]
+        piece = self.grid[start_row][start_col]
+        target = self.grid[end_row][end_col]
+        dr = abs(end_row-start_row)
+        dc = abs(end_col-start_col)
+
+        if piece.lower() in ('r', 'q') and (start_row == end_row or start_col == end_col):
+            if start_row > end_row:
+                i = start_row - 1
+                while i > end_row:
+                    if self.grid[i][end_col] != '.':
+                        return False
+                    i -= 1
+                if target != '.' and piece.isupper() == target.isupper():
+                    return False
+                else:
+                    return True
+            elif start_row < end_row:
+                i = start_row + 1
+                while i < end_row:
+                    if self.grid[i][end_col] != '.':
+                        return False
+                    i += 1
+                if target != '.' and piece.isupper() == target.isupper():
+                    return False
+                else:
+                    return True
+            elif start_col > end_col:
+                i = start_col - 1
+                while i > end_col:
+                    if self.grid[end_row][i] != '.':
+                        return False
+                    i -= 1
+                if target != '.' and piece.isupper() == target.isupper():
+                    return False
+                else:
+                    return True
+            elif start_col < end_col:
+                i = start_col + 1
+                while i < end_col:
+                    if self.grid[end_row][i] != '.':
+                        return False
+                    i += 1
+                if target != '.' and piece.isupper() == target.isupper():
+                    return False
+                else:
+                    return True
+            else:
+                return False
+        elif piece.lower() in ('b', 'q'):
+            if dr != dc:
+                return False
+            elif start_row > end_row and start_col > end_col:
+                i = start_row - 1
+                j = start_col - 1
+                while i > end_row and j > end_col:
+                    if self.grid[i][j] != '.':
+                        return False
+                    i -= 1
+                    j -= 1
+                if target != '.' and piece.isupper() == target.isupper():
+                    return False
+                else:
+                    return True
+            elif start_row < end_row and start_col < end_col:
+                i = start_row + 1
+                j = start_col + 1
+                while i < end_row and j < end_col:
+                    if self.grid[i][j] != '.':
+                        return False
+                    i += 1
+                    j += 1
+                if target != '.' and piece.isupper() == target.isupper():
+                    return False
+                else:
+                    return True
+            elif start_row > end_row and start_col < end_col:
+                i = start_row - 1
+                j = start_col + 1
+                while i > end_row and j < end_col:
+                    if self.grid[i][j] != '.':
+                        return False
+                    i -= 1
+                    j += 1
+                if target != '.' and piece.isupper() == target.isupper():
+                    return False
+                else:
+                    return True
+            elif start_row < end_row and start_col > end_col:
+                i = start_row + 1
+                j = start_col - 1
+                while i < end_row and j > end_col:
+                    if self.grid[i][j] != '.':
+                        return False
+                    i += 1
+                    j -= 1
+                if target != '.' and piece.isupper() == target.isupper():
+                    return False
+                else:
+                    return True
+            else:
+                return False
+        else:
+            return False
 
     def is_valid_move(self, start, end):
         start_row = start[0]
@@ -130,6 +238,8 @@ class Board:
             cond = False
         elif piece.lower() == 'p':
             cond = self.valid_pawn_move(start, end)
+        elif piece.lower() in ('r', 'b', 'q'):
+            cond = self.is_path_clear(start, end)
         else:
             cond = True
 
